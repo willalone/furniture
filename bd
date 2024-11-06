@@ -1,0 +1,48 @@
+CREATE DATABASE bd_suprun;
+USE bd_suprun;
+
+CREATE TABLE categories (
+    category_id INT PRIMARY KEY AUTO_INCREMENT,
+    category_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE types (
+    type_id INT PRIMARY KEY AUTO_INCREMENT,
+    type_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(50) NOT NULL,
+    role ENUM('manager', 'employee') NOT NULL
+);
+
+CREATE TABLE furniture (
+    furniture_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    quantity INT,
+    price DECIMAL(10,2),
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);
+
+CREATE TABLE furniture_types (
+    furniture_id INT,
+    type_id INT,
+    PRIMARY KEY (furniture_id, type_id),
+    FOREIGN KEY (furniture_id) REFERENCES furniture(furniture_id),
+    FOREIGN KEY (type_id) REFERENCES types(type_id)
+);
+
+INSERT INTO users (username, password, role) VALUES
+('admin', 'admin_228', 'manager'),
+('user', 'user1', 'employee');
+
+   SELECT User, Host FROM mysql.user WHERE User = 'admin';
+   DROP USER 'admin';
+
+   CREATE USER 'admin' IDENTIFIED BY 'admin_228';
+   GRANT ALL PRIVILEGES ON bd_suprun.* TO 'admin';
+   FLUSH PRIVILEGES;
+
