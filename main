@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
         self.resize(800, 600)
 
         self.table = QtWidgets.QTableWidget(self)
-        self.table.setColumnCount(5)
+        self.table.setColumnCount(6)
         self.table.setHorizontalHeaderLabels(["ID", "Название", "Категория", "Тип", "Количество", "Цена"])
 
         self.add_button = QtWidgets.QPushButton("Добавить мебель")
