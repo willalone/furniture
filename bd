@@ -35,6 +35,11 @@ CREATE TABLE furniture_types (
     FOREIGN KEY (type_id) REFERENCES types(type_id)
 );
 
+ALTER TABLE furniture_types 
+ADD CONSTRAINT furniture_types_ibfk_1 
+FOREIGN KEY (furniture_id) REFERENCES furniture(furniture_id) 
+ON DELETE CASCADE;
+
 INSERT INTO users (username, password, role) VALUES
 ('admin', 'admin_228', 'manager'),
 ('user', 'user1', 'employee');
@@ -46,3 +51,5 @@ INSERT INTO users (username, password, role) VALUES
    GRANT ALL PRIVILEGES ON bd_suprun.* TO 'admin';
    FLUSH PRIVILEGES;
 
+GRANT ALL PRIVILEGES ON bd_suprun.* TO 'admin'@'localhost' IDENTIFIED BY 'admin_228';
+FLUSH PRIVILEGES;
