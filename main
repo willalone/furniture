@@ -8,8 +8,7 @@ db_config = {
     "host": "localhost",
     "user": "admin",
     "password": "admin_228",
-    "database": "bd_suprun",
-    "charset": "utf8mb4"
+    "database": "bd_suprun"
 }
 
 class LoginWindow(QtWidgets.QWidget):
@@ -42,17 +41,14 @@ class LoginWindow(QtWidgets.QWidget):
         cursor.execute("SELECT role FROM users WHERE username=%s AND password=%s", (username, password))
         result = cursor.fetchone()
         connection.close()
-        
+
         if result:
-            print("Login successful for user:", username)  # Добавьте это для проверки
             role = result[0]
             self.main_window = MainWindow(role)
             self.main_window.show()
             self.close()
         else:
-            print("Login failed for user:", username)  # Добавьте это для проверки
             QMessageBox.warning(self, "Ошибка", "Неверные данные для входа")
-
 
 class MainWindow(QMainWindow):
     def __init__(self, role):
@@ -165,25 +161,22 @@ class MainWindow(QMainWindow):
             self.load_furniture_data()
 
     def delete_furniture(self):
+        if self.role != "manager":
+            QMessageBox.warning(self, "Ошибка", "Только менеджер может удалять мебель")
+            return
+
         row = self.table.currentRow()
         if row == -1:
-            QMessageBox.warning(self, "Ошибка", "Пожалуйста, выберите элемент для удаления")
+            QMessageBox.warning(self, "Ошибка", "Выберите мебель для удаления")
             return
 
         furniture_id = int(self.table.item(row, 0).text())
         connection = pymysql.connect(**db_config)
         cursor = connection.cursor()
-        
-        # Удаляем связанные записи в furniture_types
-        cursor.execute("DELETE FROM furniture_types WHERE furniture_id=%s", (furniture_id,))
-        
-        # Удаляем запись в furniture
         cursor.execute("DELETE FROM furniture WHERE furniture_id=%s", (furniture_id,))
         connection.commit()
         connection.close()
-        
         self.load_furniture_data()
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
